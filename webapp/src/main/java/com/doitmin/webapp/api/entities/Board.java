@@ -1,4 +1,4 @@
-package com.doitmin.webapp.entities;
+package com.doitmin.webapp.api.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
