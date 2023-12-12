@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/signup")
+@RequestMapping("/login")
 public class LoginController {
     @GetMapping
     public String mainPage(Model model) {
-        return "signup"; // src/main/resources/templates/index.html
+        return "login";
     }
 }
