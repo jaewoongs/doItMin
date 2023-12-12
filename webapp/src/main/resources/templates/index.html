@@ -8,10 +8,7 @@
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-    <script
-      type="text/javascript"
-      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=76e38295a75d4f5bac5cfb6bc002b65f"
-    ></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=76e38295a75d4f5bac5cfb6bc002b65f"></script>
     <style>
       /* global css */
       * {
@@ -94,6 +91,15 @@
         width: 80%;
         max-width: 440px;
       }
+      .locationText {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 29px;
+        color: #000;
+        margin-top: 20px;
+        white-space: pre-wrap;
+        text-align: center;
+      }
       /* Additional styles for upload container and button */
       .upload-container {
         position: relative;
@@ -128,9 +134,24 @@
         border: none;
         border-radius: 5px;
       }
+      /*  marker css */
+      .marker {
+        width: 41px;
+        height: 61px;
+        cursor: pointer;
+        position: relative;
+      }
+      .marker img{
+        position: absolute;
+        left:5px;
+        top: 5px;
+        width: 31px;
+        height: 31px;
+      }
     </style>
   </head>
   <body>
+    <!-- header -->
     <header>
       <a href="/">
         <div class="logo">Doit! Min</div>
@@ -146,10 +167,12 @@
         <path d="M14 8H8V14H6V8H0V6H6V0H8V6H14V8Z" fill="black" />
       </svg>
     </header>
+
     <!-- Map container -->
     <div id="map"></div>
-    <!-- The Modal -->
-    <div id="myModal" class="modal">
+
+    <!-- register modal -->
+    <div id="registerModal" class="modal">
       <!-- Modal content -->
       <div class="modal-content">
         <div
@@ -167,28 +190,101 @@
       </div>
     </div>
 
+    <!-- content modal -->
+    <div id="contentModal" class="modal">
+      <div class="modal-content">
+        <img src="./Rectangle 8.png" alt="image" />
+        <div class="locationText">
+          서울시 노원구 공릉동 232, 서울과학기술대학교 줍깅
+        </div>
+      </div>
+    </div>
+
     <script>
       // kakao map script
-      let container = document.getElementById("map");
-      let options = {
-        center: new kakao.maps.LatLng(37.5665, 126.978),
-        level: 3,
-      };
-      let map = new kakao.maps.Map(container, options);
+      function initMap(latitude, longitude) {
+        let container = document.getElementById("map");
+        let options = {
+          center: new kakao.maps.LatLng(latitude, longitude),
+          level: 3,
+        };
+        let map = new kakao.maps.Map(container, options);
+
+        // 마커를 표시할 위치와 title 객체 배열입니다
+        let positions = [
+          {
+            latlng: new kakao.maps.LatLng(33.450705, 126.570677),
+          },
+          {
+            latlng: new kakao.maps.LatLng(33.450936, 126.569477),
+          },
+          {
+            latlng: new kakao.maps.LatLng(33.450879, 126.56994),
+          },
+          {
+            latlng: new kakao.maps.LatLng(33.451393, 126.570738),
+          },
+          {
+            latlng: map.getCenter(),
+          },
+        ];
+
+        for (let i = 0; i < positions.length; i++) {
+          // Create a custom overlay
+          let customOverlay = new kakao.maps.CustomOverlay({
+            position: positions[i].latlng,
+            content: `<div class="marker" >
+            <img src="/profileImg" alt="profile">
+            <svg xmlns="http://www.w3.org/2000/svg" width="41" height="61" viewBox="0 0 41 61" fill="none">
+              <path d="M30.75 20.3333C30.75 17.5269 29.749 15.1309 27.7471 13.1452C25.7451 11.1595 23.3294 10.1667 20.5 10.1667C17.6706 10.1667 15.2549 11.1595 13.2529 13.1452C11.251 15.1309 10.25 17.5269 10.25 20.3333C10.25 23.1398 11.251 25.5358 13.2529 27.5215C15.2549 29.5072 17.6706 30.5 20.5 30.5C23.3294 30.5 25.7451 29.5072 27.7471 27.5215C29.749 25.5358 30.75 23.1398 30.75 20.3333ZM41 20.3333C41 23.2192 40.5596 25.5888 39.6787 27.4421L25.1045 58.1803C24.6774 59.054 24.0435 59.7424 23.2026 60.2454C22.3618 60.7485 21.4609 61 20.5 61C19.5391 61 18.6382 60.7485 17.7974 60.2454C16.9565 59.7424 16.3359 59.054 15.9355 58.1803L1.32129 27.4421C0.44043 25.5888 0 23.2192 0 20.3333C0 14.7205 2.00195 9.92839 6.00586 5.95703C10.0098 1.98568 14.8411 0 20.5 0C26.1589 0 30.9902 1.98568 34.9941 5.95703C38.998 9.92839 41 14.7205 41 20.3333Z" fill="#6CD971"/>
+            </svg>
+            </div>`, // Customize this div as needed
+            map: map,
+          });
+
+          document.querySelectorAll(".marker").forEach((element) => {
+            element.addEventListener("click", function () {
+              let contentModal = document.getElementById("contentModal");
+              contentModal.style.display = "block";
+            });
+          });
+        }
+      }
+
+      // 현재 위치 가져오기
+      function getCurrentLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            function (position) {
+              initMap(position.coords.latitude, position.coords.longitude);
+            },
+            function (error) {
+              console.error(error);
+              initMap(37.5665, 126.978); // Default location (Seoul), in case of error
+            }
+          );
+        } else {
+          initMap(37.5665, 126.978); // Default location (Seoul)
+        }
+      }
+      //  현재 위치 가져오기 함수 호출
+      getCurrentLocation();
 
       //   modal script
-      let modal = document.getElementById("myModal");
+      let registerModal = document.getElementById("registerModal");
+      let contentModal = document.getElementById("contentModal");
       let btn = document.getElementById("svgModalOpener");
       let imageContainer = document.querySelector(".upload-container");
       let fileUpload = document.getElementById("file-upload");
       //   modal 열기
       btn.onclick = function () {
-        modal.style.display = "block";
+        registerModal.style.display = "block";
       };
       //   modal 닫기
       window.onclick = function (event) {
-        if (event.target == modal) {
-          modal.style.display = "none";
+        if (event.target == registerModal || event.target == contentModal) {
+          registerModal.style.display = "none";
+          contentModal.style.display = "none";
         }
       };
       // Function to handle image loading
@@ -199,7 +295,7 @@
 
       function register() {
         alert("등록하기");
-        modal.style.display = "none";
+        registerModal.style.display = "none";
       }
     </script>
   </body>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -107,9 +107,12 @@
     </header>
 
     <div class="inputContainer">
-      <input type="text" id="id" placeholder="아이디" />
-      <input type="password" id="password" placeholder="비밀번호" />
+      <div th:text="${data}"></div>
+      <form action="/login" method="post">
+      <input type="text" id="id" placeholder="아이디" required/>
+      <input type="password" id="password" placeholder="비밀번호" required/>
       <input type="submit" class="submitBtn" value="로그인" />
+      </form>
       <a href="/signup">회원가입</a>
     </div>
   </body>
