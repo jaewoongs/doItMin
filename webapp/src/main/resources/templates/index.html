@@ -1,14 +1,206 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-</head>
-<body>
-Hello World!
-<span th:text="${no}">Hello</span>
-</body>
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=76e38295a75d4f5bac5cfb6bc002b65f"
+    ></script>
+    <style>
+      /* global css */
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        padding: 0;
+        margin: 0;
+        font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui,
+          Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+          "Noto Sans KR", "Malgun Gothic", sans-serif;
+        font-size: 20px;
+      }
+      html {
+        background-color: #fff;
+      }
+      body {
+        width: 100%;
+        max-width: 480px;
+        min-height: 100vh;
+        margin: 0 auto;
+        box-shadow: 0 0 20px rgb(0 0 0 / 5%);
+      }
+
+      input,
+      textarea,
+      select {
+        border: none;
+        outline: none;
+        opacity: 1;
+      }
+
+      a {
+        text-decoration: none;
+      }
+      /* header css */
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 40px;
+        padding: 0 20px;
+      }
+      .logo {
+        color: #000;
+        text-align: center;
+        font-family: Inter;
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 22px;
+      }
+      /* map css */
+      #map {
+        width: 100%;
+        height: calc(100vh - 40px);
+      }
+
+      /* Style for the modal */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        border-radius: 24px;
+        width: 80%;
+        max-width: 440px;
+      }
+      /* Additional styles for upload container and button */
+      .upload-container {
+        position: relative;
+        width: 100%;
+        height: 376px;
+        border: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        margin-bottom: 20px; /* Add some space between the container and the button */
+      }
+      .upload-container::after {
+        content: "+";
+        display: block;
+        font-size: 4em;
+        color: grey;
+      }
+      input[type="file"] {
+        display: none;
+      }
+      button#register-button {
+        width: 100%;
+        height: 50px;
+        padding: 10px 20px;
+        cursor: pointer;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/">
+        <div class="logo">Doit! Min</div>
+      </a>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="14"
+        viewBox="0 0 14 14"
+        fill="none"
+        id="svgModalOpener"
+      >
+        <path d="M14 8H8V14H6V8H0V6H6V0H8V6H14V8Z" fill="black" />
+      </svg>
+    </header>
+    <!-- Map container -->
+    <div id="map"></div>
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div
+          class="upload-container"
+          onclick="document.getElementById('file-upload').click()"
+        >
+          <input
+            type="file"
+            id="file-upload"
+            accept="image/*"
+            onchange="loadFile(event)"
+          />
+        </div>
+        <button id="register-button" onclick="register()">등록하기</button>
+      </div>
+    </div>
+
+    <script>
+      // kakao map script
+      let container = document.getElementById("map");
+      let options = {
+        center: new kakao.maps.LatLng(37.5665, 126.978),
+        level: 3,
+      };
+      let map = new kakao.maps.Map(container, options);
+
+      //   modal script
+      let modal = document.getElementById("myModal");
+      let btn = document.getElementById("svgModalOpener");
+      let imageContainer = document.querySelector(".upload-container");
+      let fileUpload = document.getElementById("file-upload");
+      //   modal 열기
+      btn.onclick = function () {
+        modal.style.display = "block";
+      };
+      //   modal 닫기
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+      // Function to handle image loading
+      let loadFile = function (event) {
+        imageContainer.style.backgroundImage =
+          "url('" + URL.createObjectURL(event.target.files[0]) + "')";
+      };
+
+      function register() {
+        alert("등록하기");
+        modal.style.display = "none";
+      }
+    </script>
+  </body>
 </html>
