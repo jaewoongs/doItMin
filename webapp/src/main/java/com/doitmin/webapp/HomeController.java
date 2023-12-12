@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
     @GetMapping
     public String board(Model model) {
-        model.addAttribute("no", 123);
+        model.addAttribute("no", 1234567);
         return "index"; // src/main/resources/templates/index.html
     }
 }

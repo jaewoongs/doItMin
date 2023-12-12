@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController {
     @GetMapping("")
     public String board() {
-        return "board";
+        return "boardNew1231231234123412344";
     }
 }
