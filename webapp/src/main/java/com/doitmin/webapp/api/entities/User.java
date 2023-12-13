@@ -16,13 +16,13 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
     @Column(unique = true)
-    public String email;
-    public String password;
-    public String salt;
-    public String nickname;
-    public String profileImageUrl;
+    private String email;
+    private String password;
+    private String salt;
+    private String nickname;
+    private String profileImageUrl;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RefreshToken> refreshTokens;
