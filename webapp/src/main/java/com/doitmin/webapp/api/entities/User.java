@@ -16,19 +16,19 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue
-    Long id;
+    public Long id;
     @Column(unique = true)
-    String email;
-    String password;
-    String salt;
-    String nickname;
-    String profileImageUrl;
+    public String email;
+    public String password;
+    public String salt;
+    public String nickname;
+    public String profileImageUrl;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RefreshToken> refreshTokens = new HashSet<>();
+    private Set<RefreshToken> refreshTokens;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     public void addRole(RoleName roleName) {
         if (roles == null) {
