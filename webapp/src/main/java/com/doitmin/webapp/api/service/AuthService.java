@@ -1,13 +1,20 @@
 package com.doitmin.webapp.api.service;
 
 import com.doitmin.webapp.api.dto.AuthTokenDto;
+import com.doitmin.webapp.api.dto.ProfileDto;
 import com.doitmin.webapp.api.entities.User;
 
 public interface AuthService {
 
-    public AuthTokenDto signUp(User user);
-    public AuthTokenDto signIn(String email, String password);
-    public void signOut(User user);
-    public AuthTokenDto refresh(String refreshToken);
-    public void revoke(User user);
+    AuthTokenDto signUp(User user);
+
+    AuthTokenDto signIn(String email, String password);
+
+    void signOut(User user);
+
+    AuthTokenDto refresh(String refreshToken);
+
+    void revoke(User user);
+
+    ProfileDto getProfile(ProfileDto profileDto);
 }

@@ -1,7 +1,6 @@
 package com.doitmin.webapp.api.entities;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,9 +12,11 @@ import java.util.Date;
 @Setter
 @Entity
 public class RefreshToken {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
     @ManyToOne
+    @JoinColumn
     private User user;
     @Column(unique = true)
     private String refreshToken;

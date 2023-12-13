@@ -10,11 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SignUpDto {
+public class SignInDto {
     @Schema(description = "이메일", example = "test@gmail.com")
     private String email;
     @Schema(description = "비밀번호", example = "1234")
     private String password;
-    @Schema(description = "닉네임", example = "test")
-    private String nickname;
 }

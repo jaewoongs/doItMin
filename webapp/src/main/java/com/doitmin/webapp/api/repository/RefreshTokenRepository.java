@@ -9,5 +9,5 @@ import java.util.Date;
 
 @Repository
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Id> {
-    RefreshToken findByRefreshTokenAndExpiredAtLessThanOrderByIdDesc(String refreshToken, Date now);
+    RefreshToken findByRefreshTokenAndExpiredAtGreaterThanOrderByIdDesc(String refreshToken, Date now);
 }
