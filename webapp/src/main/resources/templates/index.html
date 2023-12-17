@@ -75,6 +75,8 @@
       /* Style for the modal */
       .modal {
         display: none;
+        align-items:center;
+        justify-content: center;
         position: fixed;
         z-index: 1;
         left: 0;
@@ -139,6 +141,9 @@
       }
       input[type="file"] {
         display: none;
+      }
+      .contentImage{
+        width: 100%;
       }
       button#register-button {
         width: 100%;
@@ -270,7 +275,7 @@
               contentImage.src = boardData[this.id.split("-")[1]].boardImageUrl;
               contentText.innerHTML =
                 boardData[this.id.split("-")[1]].address;
-              contentModal.style.display = "block";
+              contentModal.style.display = "flex";
             });
           });
         }
@@ -327,7 +332,7 @@
           alert("로그인 후 이용 가능합니다.");
           location.href = "/login";
         } else {
-          registerModal.style.display = "block";
+          registerModal.style.display = "flex";
         }
       };
       //   modal 닫기
