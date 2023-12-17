@@ -14,7 +14,7 @@ public class BoardDto {
     private Long id;
     private String title;
     private String content;
-    private User writer;
+    private WriteUserDto writer;
     private String createdAt;
     private String updatedAt;
     private String deletedAt;
@@ -25,4 +25,11 @@ public class BoardDto {
     private String address;
     private String addressDetail;
     private String addressExtraInfo;
+
+    @Data
+    public static class WriteUserDto {
+        private Long id;
+        private String nickname;
+        private String profileImageUrl;
+    }
 }
