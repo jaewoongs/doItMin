@@ -1,16 +1,13 @@
-package com.doitmin.webapp.api.entities;
+package com.doitmin.webapp.api.dto;
 
-import jakarta.persistence.*;
+import com.doitmin.webapp.api.entities.User;
+import lombok.Data;
 
-@Entity
-public class Board {
-    @Id
-    @GeneratedValue
+@Data
+public class BoardDto {
     private Long id;
     private String title;
     private String content;
-    @ManyToOne
-    @JoinColumn
     private User writer;
     private String createdAt;
     private String updatedAt;

@@ -30,6 +30,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Role> roles;
 
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Board> boards;
+
     public void addRole(RoleName roleName) {
         if (roles == null) {
             roles = new HashSet<>();

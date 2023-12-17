@@ -1,50 +1,56 @@
 plugins {
-	id 'java'
-	id 'war'
-	id 'org.springframework.boot' version '3.2.0'
-	id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 apply plugin: 'war'
 group = 'com.doitmin'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+    sourceCompatibility = '17'
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter'
+
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.1.0")
+    // Replace the following with the starter dependencies of specific modules you wish to use
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	implementation 'org.apache.tomcat:tomcat-jdbc:9.0.54'
-	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0"
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'//스프링부트 3.0 이상
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'io.jsonwebtoken:jjwt:0.12.3' // Use the latest version
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.apache.tomcat:tomcat-jdbc:9.0.54'
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0"
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'//스프링부트 3.0 이상
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'io.jsonwebtoken:jjwt:0.12.3' // Use the latest version
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 //	testImplementation 'org.springframework.security:spring-security-test'
 }
 
+
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
