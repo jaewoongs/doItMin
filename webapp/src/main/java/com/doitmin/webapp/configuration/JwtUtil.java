@@ -25,7 +25,8 @@ public class JwtUtil {
                 .collect(Collectors.toList());
 
         return Jwts.builder()
-                .subject(user.getEmail())
+                .subject(String.valueOf(user.getId()))
+                .claim("email",user.getEmail())
                 .claim("nickname", user.getNickname())
                 .claim("roles", roleNames)
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -56,12 +57,14 @@ public class JwtUtil {
             Claims claims = claimsJws.getPayload();
 
             // Extract the required information from claims
-            String email = claims.getSubject();
+            Long id = Long.valueOf(claims.getSubject());
+            String email = claims.get("email", String.class);
             String nickname = claims.get("nickname", String.class);
             List<String> roles = claims.get("roles", List.class);
 
             // Create and return a ProfileDto object
             ProfileDto profile = new ProfileDto();
+            profile.setId(Long.valueOf(id));
             profile.setEmail(email);
             profile.setNickname(nickname);
             profile.setRoleNames(roles); // Ensure ProfileDto has a field to store roles

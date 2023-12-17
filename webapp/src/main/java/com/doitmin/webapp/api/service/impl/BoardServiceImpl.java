@@ -3,6 +3,8 @@ package com.doitmin.webapp.api.service.impl;
 import com.doitmin.webapp.api.dto.BoardDto;
 import com.doitmin.webapp.api.dto.BoardPostDto;
 import com.doitmin.webapp.api.dto.ProfileDto;
+import com.doitmin.webapp.api.entities.Board;
+import com.doitmin.webapp.api.entities.User;
 import com.doitmin.webapp.api.mapper.BoardMapper;
 import com.doitmin.webapp.api.mapper.BoardPostMapper;
 import com.doitmin.webapp.api.repository.BoardRepository;
@@ -47,7 +49,11 @@ public class BoardServiceImpl implements BoardService {
 // uploading file with metadata
 //        s3Template.upload(BUCKET, "file.txt", is, ObjectMetadata.builder().contentType("text/plain").build());
         }
-        boardRepository.save(BoardPostMapper.INSTANCE.toEntity(boardPostDto));
+        Board board = BoardPostMapper.INSTANCE.toEntity(boardPostDto);
+        User userReference = new User();
+        userReference.setId(profileDto.getId());
+        board.setWriter(userReference);
+        boardRepository.save(board);
         return null;
     }
 

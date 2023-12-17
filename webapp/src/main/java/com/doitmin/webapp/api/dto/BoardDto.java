@@ -19,7 +19,7 @@ public class BoardDto {
     private String updatedAt;
     private String deletedAt;
     private boolean isDeleted;
-    private String imageUrl;
+    private String boardImageUrl;
     private double latitude;
     private double longitude;
     private String address;

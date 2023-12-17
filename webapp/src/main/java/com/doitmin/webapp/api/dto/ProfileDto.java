@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProfileDto {
+    private Long id;
     private String email;
     private List<String> roleNames;
     private String nickname;
