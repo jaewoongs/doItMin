@@ -143,6 +143,12 @@
           event.preventDefault();
 
           const formData = new FormData(this);
+          const password = formData.get("password");
+          const confirmPassword = formData.get("confirmPassword");
+          if (password !== confirmPassword) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return;
+          }
           let signUpFormData = new FormData();
           let signUpDto = "{";
           for (var pair of formData.entries()) {
