@@ -8,7 +8,10 @@
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=76e38295a75d4f5bac5cfb6bc002b65f"></script>
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=76e38295a75d4f5bac5cfb6bc002b65f&libraries=services"
+    ></script>
     <style>
       /* global css */
       * {
@@ -121,6 +124,19 @@
         font-size: 4em;
         color: grey;
       }
+      .upload-container.image-loaded::after {
+        display: none;
+      }
+      .address_name {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 29px;
+        color: #000;
+        margin-top: 20px;
+        white-space: pre-wrap;
+        text-align: center;
+        margin-bottom: 10px;
+      }
       input[type="file"] {
         display: none;
       }
@@ -141,12 +157,13 @@
         cursor: pointer;
         position: relative;
       }
-      .marker img{
+      .marker img {
         position: absolute;
-        left:5px;
+        left: 5px;
         top: 5px;
         width: 31px;
         height: 31px;
+        border-radius: 50%;
       }
     </style>
   </head>
@@ -175,32 +192,39 @@
     <div id="registerModal" class="modal">
       <!-- Modal content -->
       <div class="modal-content">
-        <div
-          class="upload-container"
-          onclick="document.getElementById('file-upload').click()"
-        >
-          <input
-            type="file"
-            id="file-upload"
-            accept="image/*"
-            onchange="loadFile(event)"
-          />
-        </div>
-        <button id="register-button" onclick="register()">등록하기</button>
+        <form id="registerForm">
+          <div
+            class="upload-container"
+            onclick="document.getElementById('file-upload').click()"
+          >
+            <input
+              type="file"
+              id="file-upload"
+              name="file"
+              accept="image/*"
+              onchange="loadFile(event)"
+            />
+            <input type="hidden" id="latitude" name="latitude" value="" />
+            <input type="hidden" id="longitude" name="longitude" value="" />
+            <input type="hidden" id="address" name="address" value="" />
+          </div>
+          <div class="address_name"></div>
+          <button type="submit" id="register-button">Register</button>
+        </form>
       </div>
     </div>
 
     <!-- content modal -->
     <div id="contentModal" class="modal">
       <div class="modal-content">
-        <img src="./Rectangle 8.png" alt="image" />
+        <img src="" alt="image" class="contentImage" />
         <div class="locationText">
           서울시 노원구 공릉동 232, 서울과학기술대학교 줍깅
         </div>
       </div>
     </div>
 
-    <script>
+    <script th:inline="javascript">
       // kakao map script
       function initMap(latitude, longitude) {
         let container = document.getElementById("map");
@@ -210,31 +234,27 @@
         };
         let map = new kakao.maps.Map(container, options);
 
+        setCurrentLocation(latitude, longitude);
+
         // 마커를 표시할 위치와 title 객체 배열입니다
-        let positions = [
-          {
-            latlng: new kakao.maps.LatLng(33.450705, 126.570677),
-          },
-          {
-            latlng: new kakao.maps.LatLng(33.450936, 126.569477),
-          },
-          {
-            latlng: new kakao.maps.LatLng(33.450879, 126.56994),
-          },
-          {
-            latlng: new kakao.maps.LatLng(33.451393, 126.570738),
-          },
-          {
-            latlng: map.getCenter(),
-          },
-        ];
+        let boardData = [[${boards}]] || [];
+        console.log(boardData);
+
+        let positions = boardData.map((board) => {
+          return {
+            profileImageUrl:board.writer.profileImageUrl,
+            latlng: new kakao.maps.LatLng(board.latitude, board.longitude),
+          };
+        });
+
 
         for (let i = 0; i < positions.length; i++) {
           // Create a custom overlay
+          if(positions[i].profileImageUrl == null) continue;
           let customOverlay = new kakao.maps.CustomOverlay({
             position: positions[i].latlng,
-            content: `<div class="marker" >
-            <img src="/profileImg" alt="profile">
+            content: `<div class="marker" id="board-${i}">
+            <img src="${positions[i].profileImageUrl}" alt="profile">
             <svg xmlns="http://www.w3.org/2000/svg" width="41" height="61" viewBox="0 0 41 61" fill="none">
               <path d="M30.75 20.3333C30.75 17.5269 29.749 15.1309 27.7471 13.1452C25.7451 11.1595 23.3294 10.1667 20.5 10.1667C17.6706 10.1667 15.2549 11.1595 13.2529 13.1452C11.251 15.1309 10.25 17.5269 10.25 20.3333C10.25 23.1398 11.251 25.5358 13.2529 27.5215C15.2549 29.5072 17.6706 30.5 20.5 30.5C23.3294 30.5 25.7451 29.5072 27.7471 27.5215C29.749 25.5358 30.75 23.1398 30.75 20.3333ZM41 20.3333C41 23.2192 40.5596 25.5888 39.6787 27.4421L25.1045 58.1803C24.6774 59.054 24.0435 59.7424 23.2026 60.2454C22.3618 60.7485 21.4609 61 20.5 61C19.5391 61 18.6382 60.7485 17.7974 60.2454C16.9565 59.7424 16.3359 59.054 15.9355 58.1803L1.32129 27.4421C0.44043 25.5888 0 23.2192 0 20.3333C0 14.7205 2.00195 9.92839 6.00586 5.95703C10.0098 1.98568 14.8411 0 20.5 0C26.1589 0 30.9902 1.98568 34.9941 5.95703C38.998 9.92839 41 14.7205 41 20.3333Z" fill="#6CD971"/>
             </svg>
@@ -244,11 +264,36 @@
 
           document.querySelectorAll(".marker").forEach((element) => {
             element.addEventListener("click", function () {
+              const contentImage = document.querySelector(".contentImage");
+              const contentText = document.querySelector(".locationText");
               let contentModal = document.getElementById("contentModal");
+              contentImage.src = boardData[this.id.split("-")[1]].boardImageUrl;
+              contentText.innerHTML =
+                boardData[this.id.split("-")[1]].address;
               contentModal.style.display = "block";
             });
           });
         }
+      }
+
+      // 현재 위치 input에 저장하기
+      function setCurrentLocation(latitude, longitude) {
+        document.getElementById("latitude").value = latitude;
+        document.getElementById("longitude").value = longitude;
+
+        var geocoder = new kakao.maps.services.Geocoder();
+
+        let coord = new kakao.maps.LatLng(latitude, longitude);
+        let callback = function (result, status) {
+          if (status === kakao.maps.services.Status.OK) {
+            document.getElementById("address").value =
+              result[0].address.address_name;
+            document.querySelector(".address_name").innerHTML =
+              result[0].address.address_name;
+          }
+        };
+
+        geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
       }
 
       // 현재 위치 가져오기
@@ -259,8 +304,7 @@
               initMap(position.coords.latitude, position.coords.longitude);
             },
             function (error) {
-              console.error(error);
-              initMap(37.5665, 126.978); // Default location (Seoul), in case of error
+              initMap(37.5665, 126.978); // Default location (Seoul)
             }
           );
         } else {
@@ -278,7 +322,13 @@
       let fileUpload = document.getElementById("file-upload");
       //   modal 열기
       btn.onclick = function () {
-        registerModal.style.display = "block";
+        var accessToken = localStorage.getItem("accessToken");
+        if (accessToken == null) {
+          alert("로그인 후 이용 가능합니다.");
+          location.href = "/login";
+        } else {
+          registerModal.style.display = "block";
+        }
       };
       //   modal 닫기
       window.onclick = function (event) {
@@ -289,14 +339,53 @@
       };
       // Function to handle image loading
       let loadFile = function (event) {
+        let uploadContainer = document.querySelector(".upload-container");
         imageContainer.style.backgroundImage =
           "url('" + URL.createObjectURL(event.target.files[0]) + "')";
+        uploadContainer.classList.add("image-loaded");
       };
+    </script>
+    <script>
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
 
-      function register() {
-        alert("등록하기");
-        registerModal.style.display = "none";
-      }
+          var accessToken = localStorage.getItem("accessToken");
+          var formData = new FormData(this);
+          let boardPostDtoString = "{";
+          let boardPostFormData = new FormData();
+          for (let key of formData.keys()) {
+            if (key == "file") {
+              boardPostFormData.append(key, formData.get(key));
+              continue;
+            }
+            // key 앞뒤로 "" 붙이기, value 앞뒤로 "" 붙이기
+            boardPostDtoString +=
+              '"' + key + '":' + '"' + formData.get(key) + '",';
+          }
+          boardPostDtoString = boardPostDtoString.slice(0, -1);
+          boardPostDtoString += "}";
+          boardPostFormData.append("boardPostDtoString", boardPostDtoString);
+
+          fetch("/api/v1/board", {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + accessToken,
+            },
+            body: boardPostFormData,
+          })
+            .then((data) => {
+              alert("등록되었습니다.");
+              location.href = "/";
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              // Handle error
+            });
+        });
+
+      // Other JavaScript code...
     </script>
   </body>
 </html>

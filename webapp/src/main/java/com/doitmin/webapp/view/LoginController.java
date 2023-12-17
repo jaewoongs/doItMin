@@ -64,7 +64,8 @@ public class LoginController {
 
              return "loginSuccess";
         } catch (Exception e) {
-            model.addAttribute("error", "이메일 또는 비밀번호를 확인해주세요.");
+            model.addAttribute("error", e.getMessage());
+//            model.addAttribute("error", "이메일 또는 비밀번호를 확인해주세요.");
             return "login";
         }
     }
@@ -125,6 +126,7 @@ public class LoginController {
         }
     }
     public static class ProfileResponse {
+        private String id;
         private String email;
         private String nickname;
         private String[] roleNames;
@@ -153,6 +155,13 @@ public class LoginController {
     
         public void setRoleNames(String[] roleNames) {
             this.roleNames = roleNames;
+        }
+
+        public String getId() {
+            return id;
+        }
+        public void setId(String id) {
+            this.id = id;
         }
     }
 }
