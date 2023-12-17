@@ -64,8 +64,7 @@ public class LoginController {
 
              return "loginSuccess";
         } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-//            model.addAttribute("error", "이메일 또는 비밀번호를 확인해주세요.");
+            model.addAttribute("error", "이메일 또는 비밀번호를 확인해주세요.");
             return "login";
         }
     }
