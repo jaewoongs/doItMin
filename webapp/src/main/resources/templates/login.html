@@ -107,12 +107,18 @@
     </header>
 
     <div class="inputContainer">
-      <div th:text="${data}"></div>
+      <p th:if="${error}" th:text="${error}" style="color: red"></p>
       <form action="/login" method="post">
-      <input type="text" id="id" placeholder="아이디" required/>
-      <input type="password" id="password" placeholder="비밀번호" required/>
-      <input type="submit" class="submitBtn" value="로그인" />
+        <input type="text" name="email" placeholder="아이디" required />
+        <input
+          type="password"
+          name="password"
+          placeholder="비밀번호"
+          required
+        />
+        <input type="submit" class="submitBtn" value="로그인" />
       </form>
+
       <a href="/signup">회원가입</a>
     </div>
   </body>
