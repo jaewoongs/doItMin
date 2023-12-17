@@ -20,8 +20,8 @@ public class BoardDto {
     private String deletedAt;
     private boolean isDeleted;
     private String imageUrl;
-    private long latitude;
-    private long longitude;
+    private double latitude;
+    private double longitude;
     private String address;
     private String addressDetail;
     private String addressExtraInfo;

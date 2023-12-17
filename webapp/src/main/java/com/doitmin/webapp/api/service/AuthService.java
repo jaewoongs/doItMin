@@ -3,10 +3,13 @@ package com.doitmin.webapp.api.service;
 import com.doitmin.webapp.api.dto.AuthTokenDto;
 import com.doitmin.webapp.api.dto.ProfileDto;
 import com.doitmin.webapp.api.entities.User;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public interface AuthService {
 
-    AuthTokenDto signUp(User user);
+    AuthTokenDto signUp(User user, MultipartFile profileImage) throws IOException;
 
     AuthTokenDto signIn(String email, String password);
 

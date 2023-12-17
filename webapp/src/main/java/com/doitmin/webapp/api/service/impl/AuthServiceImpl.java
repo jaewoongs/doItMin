@@ -8,13 +8,18 @@ import com.doitmin.webapp.api.enums.RoleName;
 import com.doitmin.webapp.api.repository.RefreshTokenRepository;
 import com.doitmin.webapp.api.repository.UserRepository;
 import com.doitmin.webapp.api.service.AuthService;
+import io.awspring.cloud.s3.S3Resource;
+import io.awspring.cloud.s3.S3Template;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.UUID;
 
@@ -22,6 +27,9 @@ import static com.doitmin.webapp.configuration.JwtUtil.generateAccessToken;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
+    @Autowired
+    private S3Template s3Template;
 
     @Autowired
     private UserRepository userRepository;
@@ -34,16 +42,27 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public AuthTokenDto signUp(User user) {
+    public AuthTokenDto signUp(User user, MultipartFile profileImage) throws IOException {
         User exist = userRepository.findByEmail(user.getEmail());
         if (exist != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 가입된 메일입니다.");
         }
         // Encrypt the password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (profileImage != null && !profileImage.isEmpty()) {
+            InputStream is = profileImage.getInputStream();
+            String extension = profileImage.getOriginalFilename().substring(profileImage.getOriginalFilename().lastIndexOf("."));
+// uploading file without metadata
+            S3Resource s = s3Template.upload("doitmin", "DoitminFile_" + System.currentTimeMillis() + extension, is);
+            String url = s.getURL().toString();
+            user.setProfileImageUrl(url);
+// uploading file with metadata
+//        s3Template.upload(BUCKET, "file.txt", is, ObjectMetadata.builder().contentType("text/plain").build());
+        }
         // Save the user
         User newUser = userRepository.save(user);
         addRoleToUser(newUser.getId(), RoleName.USER);
+
 
         // Generate and save the refresh token
         RefreshToken refreshToken = new RefreshToken();
